@@ -83,8 +83,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
               <figure>
                 <img
                   class="w-full h-[350px] md:h-[550px] object-contain"
-                  [src]="productResource.value()?.image"
-                  [alt]="productResource.value()?.title"
+                  [src]="imageUrl() || 'assets/imgs/no-image.png'"
+                  [alt]="productResource.value()?.name"
                 />
               </figure>
             }
@@ -99,7 +99,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
               <div class="skeleton w-full mt-8 h-[50px]"></div>
             } @else {
               <h2 class="text-2xl font-bold mb-3">
-                {{ productResource.value()?.title }}
+                {{ productResource.value()?.name }}
               </h2>
 
               <h3 class="text-3xl font-bold">
@@ -112,7 +112,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
               ></p>
 
               <div class="badge badge-outline capitalize mt-2">
-                {{ productResource.value()?.category }}
+                {{ productResource.value()?.category?.name || 'No Category' }}
               </div>
 
               <button
@@ -195,13 +195,13 @@ export class ProductDetailComponent implements OnInit {
 
   similarProductResource = resource<Product[], { category: string } | null>({
     request: () => {
-      const category = this.productResource.value()?.category;
-      return category ? { category } : null;
+      const categoryObj = this.productResource.value()?.category;
+      return categoryObj ? { category: categoryObj.name } : null; // ✅ categoryObj.name ашиглах
     },
     loader: ({ request }) =>
       request
         ? this.productService.getProductsWithLimit(4, request.category)
-        : Promise.resolve([]), // ✅ wrap empty array in a Promise
+        : Promise.resolve([]),
   });
 
   isFirstItem = computed(() => Number(this.productId()) === 1);
@@ -244,7 +244,7 @@ export class ProductDetailComponent implements OnInit {
   addItem() {
     this.shoppingCartLocalStorageService.addItem({
       ...this.productResource.value()!,
-      quantity: 1,
+      stock: 1,
     });
   }
 
@@ -270,4 +270,18 @@ export class ProductDetailComponent implements OnInit {
       this.productResource.value()?.description || '',
     );
   }
+  imageUrl = computed(() => {
+    const gallery = this.productResource.value()?.images?.gallery;
+    if (gallery && gallery.length > 0) {
+      // gallery-ийн эхний зургийг сервер URL-тэй нийлүүлж авах
+      return this.productService.getImageUrl(gallery[0]);
+    }
+
+    // main зураг байгаа бол
+    const main = this.productResource.value()?.images?.main;
+    if (main) return this.productService.getImageUrl(main);
+
+    // Хоосон зураг
+    return 'assets/imgs/no-image.png';
+  });
 }

@@ -52,13 +52,13 @@ import { ProductService } from '../../services/product.service';
         </div>
 
         <span class="text-green-600 bg-green-50 px-2 py-1 rounded-md text-xs">
-          Шинэ | Үлдэгдэл: 5ш
+          Шинэ | Үлдэгдэл: {{ product()?.stock }}
         </span>
       </div>
 
       <!-- Title -->
       <h3 class="font-semibold text-gray-800 line-clamp-2 h-[48px]">
-        {{ product()?.title }}
+        {{ product()?.name }}
       </h3>
 
       <!-- Price -->
@@ -81,30 +81,8 @@ import { ProductService } from '../../services/product.service';
         <button
           [disabled]="checkItemAlreadyExist()"
           (click)="addItem()"
-          class="bg-sky-400 hover:bg-sky- text-white px-4 py-2 rounded-full text-sm font-medium transition disabled:bg-gray-300"
+          class="bg-sky-400 hover:bg-sky-500 text-white px-4 py-2 rounded-full text-sm font-medium transition disabled:bg-gray-300"
         >
-          <svg
-            class="h-6 w-6 inline-block mr-1"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-            <g
-              id="SVGRepo_tracerCarrier"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></g>
-            <g id="SVGRepo_iconCarrier">
-              <path
-                d="M6.29977 5H21L19 12H7.37671M20 16H8L6 3H3M9 20C9 20.5523 8.55228 21 8 21C7.44772 21 7 20.5523 7 20C7 19.4477 7.44772 19 8 19C8.55228 19 9 19.4477 9 20ZM20 20C20 20.5523 19.5523 21 19 21C18.4477 21 18 20.5523 18 20C18 19.4477 18.4477 19 19 19C19.5523 19 20 19.4477 20 20Z"
-                stroke="#ffffff"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              ></path>
-            </g>
-          </svg>
           Сагслах
         </button>
       </div>
@@ -112,6 +90,11 @@ import { ProductService } from '../../services/product.service';
   `,
 })
 export class ProductCardComponent {
+  product = input<Product>();
+
+  faHeartSolid = faHeartSolid;
+  faHeartRegular = faHeartRegular;
+
   private readonly shoppingCartLocalStorageService = inject(
     ShoppingCartLocalStorageService,
   );
@@ -121,19 +104,13 @@ export class ProductCardComponent {
   private readonly productService = inject(ProductService);
   private readonly router = inject(Router);
 
-  faHeart = faHeart;
-  faEye = faEye;
-  faCartShopping = faCartShopping;
-  faHeartSolid = faHeartSolid;
-  faHeartRegular = faHeartRegular;
-  product = input<Product>();
-
   cartItems = computed(() => this.shoppingCartLocalStorageService.cartItems());
 
   addItem() {
+    if (!this.product()) return;
     this.shoppingCartLocalStorageService.addItem({
-      ...this?.product()!,
-      quantity: 1, // Add default quantity
+      ...this.product()!,
+      stock: 1,
     });
   }
 
@@ -150,6 +127,7 @@ export class ProductCardComponent {
   }
 
   toggleFavoriteItem() {
+    if (!this.product()) return;
     if (this.checkFavoriteItemAlreadyExist()) {
       this.favoriteItemsLocalStorageService.removeItem(this.product()!);
     } else {
@@ -158,11 +136,12 @@ export class ProductCardComponent {
   }
 
   onClickNavigate() {
+    if (!this.product()) return;
     this.router.navigate(['/products', this.product()?.id]);
   }
-  imageUrl = computed(() =>
-    this.product()?.image
-      ? this.productService.getImageUrl(this.product()!.image)
-      : '',
-  );
+
+  imageUrl = computed(() => {
+    const img = this.product()?.images?.main;
+    return img ? this.productService.getImageUrl(img) : '';
+  });
 }

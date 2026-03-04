@@ -43,7 +43,7 @@ export class ProductService {
 
     return {
       ...item,
-      image: this.getImageUrl(item.image),
+      images: item.images,
     };
   }
 

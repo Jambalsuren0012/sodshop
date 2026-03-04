@@ -55,10 +55,10 @@ import { CommonModule } from '@angular/common';
               <fa-icon [icon]="faCartShopping"></fa-icon>
 
               <span
-                *ngIf="cartItemQuantity() > 0"
+                *ngIf="cartItemStock() > 0"
                 class="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full px-1.5 py-0.5"
               >
-                {{ cartItemQuantity() }}
+                {{ cartItemStock() }}
               </span>
             </a>
 
@@ -168,9 +168,7 @@ export class HeaderComponent {
   faHeartCircleBolt = faHeartCircleBolt;
   faHeartCircleExclamation = faHeartCircleExclamation;
 
-  cartItemQuantity = computed(() =>
-    this.shoppingCartService.cartItemQuantity(),
-  );
+  cartItemStock = computed(() => this.shoppingCartService.cartItemQuantity());
 
   isLoggedIn() {
     return this.auth.isLoggedIn();

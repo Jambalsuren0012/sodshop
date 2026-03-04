@@ -9,10 +9,10 @@ export class ShoppingCartLocalStorageService {
 
   cartItems = signal<Product[]>(this.loadItems());
   cartItemQuantity = computed(() => {
-    return this.cartItems().reduce((a, c) => {
-      a += c?.quantity!;
-      return a;
-    }, 0);
+    return this.cartItems().reduce(
+      (total, item) => total + (item.stock || 0),
+      0,
+    );
   });
 
   private loadItems(): Product[] {

@@ -252,7 +252,7 @@ export class ShoppingCartComponent {
   totalPrice = computed(() => {
     return new Intl.NumberFormat('en-IN').format(
       this.cartItems().reduce((a, c) => {
-        a += c?.price * c?.quantity!;
+        a += c?.price * c?.stock!;
         return a;
       }, 0),
     );

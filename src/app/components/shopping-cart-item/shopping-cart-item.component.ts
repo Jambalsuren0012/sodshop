@@ -1,8 +1,9 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, computed } from '@angular/core';
 import { Product } from '../../../type';
 import { faMinus, faPlus, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ShoppingCartLocalStorageService } from '../../services/shopping-cart-local-storage.service';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-shopping-cart-item',
@@ -12,13 +13,13 @@ import { ShoppingCartLocalStorageService } from '../../services/shopping-cart-lo
       <figure>
         <img
           class="h-[130px] w-[140px] object-fill"
-          [src]="item()?.image"
+          [src]="imageUrl() || 'assets/imgs/no-image.png'"
           alt="Shoes"
         />
       </figure>
       <div class="w-full">
         <div class="space-y-1">
-          <p class="font-bold">{{ item()?.title }}</p>
+          <p class="font-bold">{{ item()?.name }}</p>
           <p class="font-bold text-lg mt-auto">$ {{ item()?.price }}</p>
         </div>
         <div class="mt-3 flex items-center justify-between gap-x-4">
@@ -29,7 +30,7 @@ import { ShoppingCartLocalStorageService } from '../../services/shopping-cart-lo
             >
               <fa-icon [icon]="faMinus"></fa-icon>
             </button>
-            <span>{{ item()?.quantity }}</span>
+            <span>{{ item()?.stock }}</span>
             <button
               (click)="incrementItemQuantity()"
               class="btn btn-soft btn-sm"
@@ -56,6 +57,7 @@ export class ShoppingCartItemComponent {
   private readonly shoppingCartLocalStorageService = inject(
     ShoppingCartLocalStorageService,
   );
+  private readonly productService = inject(ProductService);
 
   faPlus = faPlus;
   faMinus = faMinus;
@@ -66,18 +68,18 @@ export class ShoppingCartItemComponent {
   incrementItemQuantity() {
     this.shoppingCartLocalStorageService.updateItem({
       ...this?.item()!,
-      quantity: this.item()?.quantity! + 1,
+      status: this.item()?.stock! + 1,
     });
   }
 
   decrementItemQuantity() {
     // Remove item when quantity equal to 0
-    if (this.item()?.quantity! <= 1) {
+    if (this.item()?.stock! <= 1) {
       this.shoppingCartLocalStorageService.removeItem(this.item()!);
     } else {
       this.shoppingCartLocalStorageService.updateItem({
         ...this?.item()!,
-        quantity: this.item()?.quantity! - 1,
+        stock: this.item()?.stock! - 1,
       });
     }
   }
@@ -91,4 +93,8 @@ export class ShoppingCartItemComponent {
   removeItemQuantity() {
     this.shoppingCartLocalStorageService.removeItem(this.item()!);
   }
+  imageUrl = computed(() => {
+    const img = this.item()?.images?.main;
+    return img ? this.productService.getImageUrl(img) : '';
+  });
 }

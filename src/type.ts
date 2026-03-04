@@ -1,11 +1,22 @@
 export interface Product {
   id: number;
-  title: string;
-  price: number;
-  quantity?: number;
+  name: string;
   description: string;
-  category: string;
-  image: string;
+  price: number;
+  discount_price: number | null;
+  sku: string;
+  stock: number;
+  brand: string;
+  status: number;
+  category: {
+    id: number;
+    name: string;
+  };
+
+  images: {
+    main: string | null;
+    gallery: string[];
+  };
 }
 
 export interface PaymentInfoData {

@@ -1,16 +1,21 @@
 export interface Product {
   id: number;
-  name: string; // title биш name
+  name: string;
   description: string;
   price: number;
   discount_price: number | null;
   sku: string;
-  stock: number;
+  quantity: number;
   brand: string;
   status: number;
 
+  category: {
+    id: number;
+    name: string;
+  };
+
   images: {
-    main: string;
+    main: string | null;
     gallery: string[];
   };
 }
