@@ -171,9 +171,10 @@ import { Meta, Title } from '@angular/platform-browser';
               class="mt-10 flex items-center justify-center flex-col gap-y-2"
             >
               <p class="text-xl text-center text-gray-400">
-                No item in your shopping cart
+                Таны сагсанд бараа байхгүй байна. Дэлгүүр лүү буцаж бараа
+                сонгоорой.
               </p>
-              <a routerLink="/" class="btn btn-soft">Continue shopping</a>
+              <a routerLink="/" class="btn btn-soft">Дэлгүүр луу буцах</a>
             </div>
           }
         </div>

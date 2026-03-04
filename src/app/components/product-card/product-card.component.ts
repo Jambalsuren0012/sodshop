@@ -52,7 +52,7 @@ import { ProductService } from '../../services/product.service';
         </div>
 
         <span class="text-green-600 bg-green-50 px-2 py-1 rounded-md text-xs">
-          Шинэ | Үлдэгдэл: {{ product()?.stock }}
+          Үлдэгдэл: {{ product()?.stock }}
         </span>
       </div>
 

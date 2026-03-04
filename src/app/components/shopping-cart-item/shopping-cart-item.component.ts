@@ -68,7 +68,7 @@ export class ShoppingCartItemComponent {
   incrementItemQuantity() {
     this.shoppingCartLocalStorageService.updateItem({
       ...this?.item()!,
-      status: this.item()?.stock! + 1,
+      stock: this.item()?.stock! + 1,
     });
   }
 

@@ -131,14 +131,62 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
                 {{ productResource.value()?.category?.name || 'No Category' }}
               </div>
 
-              <button
-                [disabled]="checkItemAlreadyExist()"
-                (click)="addItem()"
-                class="w-full btn btn-primary mt-8"
-              >
-                <fa-icon [icon]="faCartShopping"></fa-icon>
-                Add to Cart
-              </button>
+              <div class="mt-6 space-y-6">
+                <!-- Quantity + Stock -->
+                <div class="flex items-center justify-between">
+                  <!-- Quantity Selector -->
+                  <div
+                    class="flex items-center bg-base-200 rounded-full px-4 py-2 gap-4"
+                  >
+                    <button
+                      (click)="decreaseQuantity()"
+                      [disabled]="quantity() <= 1"
+                      class="text-lg font-bold text-gray-500"
+                    >
+                      -
+                    </button>
+
+                    <span class="text-lg font-semibold w-6 text-center">
+                      {{ quantity() }}
+                    </span>
+
+                    <button
+                      (click)="increaseQuantity()"
+                      [disabled]="
+                        quantity() >= (productResource.value()?.stock ?? 0)
+                      "
+                      class="text-lg font-bold text-orange-500"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <!-- Stock -->
+                  <span class="text-sm text-gray-400">
+                    {{ productResource.value()?.stock }} үлдэгдэл
+                  </span>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex gap-4">
+                  <!-- Add to Cart -->
+                  <button
+                    (click)="addItem()"
+                    [disabled]="checkItemAlreadyExist()"
+                    class="flex-1 btn bg-gray-300 text-black rounded-full border-0 hover:bg-gray-400"
+                  >
+                    Сагслах
+                  </button>
+
+                  <!-- Buy Now -->
+                  <button
+                    (click)="buyNow()"
+                    class="flex-1 btn bg-orange-500 text-white rounded-full border-0 hover:bg-orange-600"
+                  >
+                    Худалдан авах
+                  </button>
+                </div>
+              </div>
             </ng-template>
           </div>
         </div>
@@ -146,7 +194,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
       <!-- SIMILAR PRODUCTS -->
       <div class="mx-auto pt-28 pb-10 px-6 max-w-7xl">
-        <h3 class="text-2xl font-bold mb-8">Other similar products</h3>
+        <h3 class="text-2xl font-bold mb-8">Адил төстэй бүтээгдэхүүнүүд</h3>
 
         <ng-container
           *ngIf="isLoadingSimilarProductResource(); else similarLoaded"
@@ -208,10 +256,18 @@ export class ProductDetailComponent implements OnInit {
       const categoryObj = this.productResource.value()?.category;
       return categoryObj ? { category: categoryObj.name } : null;
     },
-    loader: ({ request }) =>
-      request
-        ? this.productService.getProductsWithLimit(4, request.category)
-        : Promise.resolve([]),
+    loader: async ({ request }) => {
+      if (!request) return [];
+
+      const products = await this.productService.getProductsWithLimit(
+        10,
+        request.category,
+      ); // ихээхэн авчирч фильтр хийх
+      const currentId = this.productResource.value()?.id;
+
+      // Одоогийн барааг хасах ба 4 бүтээгдэхүүн авах
+      return products.filter((p) => p.id !== currentId).slice(0, 4);
+    },
   });
 
   isFirstItem = computed(() => Number(this.productId()) === 1);
@@ -287,6 +343,26 @@ export class ProductDetailComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustHtml(
       this.productResource.value()?.description || '',
     );
+  }
+  quantity = signal(1);
+
+  increaseQuantity() {
+    const stock = this.productResource.value()?.stock ?? 0;
+
+    if (this.quantity() < stock) {
+      this.quantity.update((q) => q + 1);
+    }
+  }
+
+  decreaseQuantity() {
+    if (this.quantity() > 1) {
+      this.quantity.update((q) => q - 1);
+    }
+  }
+
+  buyNow() {
+    this.addItem();
+    this.router.navigate(['/shopping-cart']);
   }
 
   imageUrl = computed(() => {
