@@ -1,69 +1,61 @@
-import { Component, inject, computed, effect, resource } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, computed, inject, resource } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
 import { ProductCardSkeletonComponent } from '../../components/product-card-skeleton/product-card-skeleton.component';
 import { Meta, Title } from '@angular/platform-browser';
 import { FooterComponent } from '../../components/footer/footer.component';
-import { CarouselComponent } from '../../carousel/carousel.component';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-baraa',
   standalone: true,
   imports: [
-    CommonModule,
-    CarouselComponent,
     ProductCardComponent,
     ProductCardSkeletonComponent,
     FooterComponent,
   ],
   template: `
-    <div class="mt-6 pb-10 px-6">
-      <ng-container *ngIf="isLoading(); else loaded">
+    <div class="mt-28 pb-10 px-6">
+      @if (isLoading()) {
         <div
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 mx-auto max-w-7xl gap-6"
         >
-          <app-product-card-skeleton *ngFor="let item of [1, 2, 3, 4]" />
+          @for (item of [1, 2, 3, 4]; track item) {
+            <app-product-card-skeleton />
+          }
         </div>
-      </ng-container>
-
-      <ng-template #loaded>
+      } @else {
         <div
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 mx-auto max-w-7xl gap-6"
         >
-          <app-product-card
-            *ngFor="let product of productsResource.value()"
-            [product]="product"
-          />
+          @for (product of productsResource.value(); track product.id) {
+            <app-product-card [product]="product" />
+          }
         </div>
-      </ng-template>
+      }
     </div>
-
     <app-footer />
   `,
 })
-export class HomeComponent {
+export class BaraaComponent {
   private readonly productService = inject(ProductService);
 
   productsResource = resource({
-    loader: () => this.productService.getProducts(),
+    loader: async () => {
+      const res = await this.productService.getProducts();
+      return res; // res already Product[]
+    },
   });
 
   isLoading = computed(() => this.productsResource.isLoading());
-
-  errorEffect = effect(() => {
-    const error = this.productsResource.error() as Error;
-    if (error) console.log(error);
-  });
 
   constructor(
     private meta: Meta,
     private title: Title,
   ) {
-    this.title.setTitle('Home');
+    this.title.setTitle('Бүх бараа');
     this.meta.updateTag({
       name: 'description',
-      content: 'Home page description',
+      content: 'Бүх барааны жагсаалт',
     });
   }
 }

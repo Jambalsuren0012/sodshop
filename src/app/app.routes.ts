@@ -1,12 +1,13 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
-import { JewelryComponent } from './pages/jewelry/jewelry.component';
-import { ElectronicsComponent } from './pages/electronics/electronics.component';
+
 import { ShoppingCartComponent } from './pages/shopping-cart/shopping-cart.component';
-import { MenClothingComponent } from './pages/men-clothing/men-clothing.component';
-import { WomenClothingComponent } from './pages/women-clothing/women-clothing.component';
+
 import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
 import { FavoriteItemsComponent } from './pages/favorite-items/favorite-items.component';
+import { BaraaComponent } from './pages/baraa/baraa.component';
+import { adminGuard } from './guards/admin.guard';
+import { LoginComponent } from './login/login.component';
 
 export const routes: Routes = [
   { path: '', title: 'Home', component: HomeComponent },
@@ -16,26 +17,28 @@ export const routes: Routes = [
     component: FavoriteItemsComponent,
   },
   {
+    path: 'login',
+    title: 'login',
+    component: LoginComponent,
+  },
+  {
+    path: 'admin',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('./pages/admin/admin.component').then((m) => m.AdminComponent),
+  },
+  {
+    path: 'baraa',
+    title: 'Baraa',
+    component: BaraaComponent,
+  },
+
+  {
     path: 'products/:id',
     title: 'Product Details',
     component: ProductDetailComponent,
   },
-  {
-    path: 'men-clothing',
-    title: `Men's Clothings`,
-    component: MenClothingComponent,
-  },
-  {
-    path: 'women-clothing',
-    title: `Women's Clothings`,
-    component: WomenClothingComponent,
-  },
-  { path: 'jewelry', title: 'Jewelry', component: JewelryComponent },
-  {
-    path: 'electronics',
-    title: 'Electronics',
-    component: ElectronicsComponent,
-  },
+
   {
     path: 'shopping-cart',
     title: 'Shopping Cart',

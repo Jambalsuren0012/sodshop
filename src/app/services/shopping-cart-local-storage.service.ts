@@ -55,4 +55,8 @@ export class ShoppingCartLocalStorageService {
   checkItemAlreadyExist(id: number) {
     return this.cartItems().some((ct) => ct.id === id);
   }
+  clearCart() {
+    localStorage.removeItem(this.key);
+    this.cartItems.set([]);
+  }
 }

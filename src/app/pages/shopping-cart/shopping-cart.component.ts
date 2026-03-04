@@ -121,23 +121,27 @@ import { Meta, Title } from '@angular/platform-browser';
               <fa-icon [icon]="faExclamationCircle"></fa-icon>
             </div>
           </div>
-          @if(cartItemQuantity() >= 1) {
-          <div class="border-t border-t-base-300 pt-4 mt-4 space-y-2">
-            <div class="flex items-center justify-between">
-              <span>Total Quantity</span>
-              <span class="text-lg font-bold">{{ cartItemQuantity() }}</span>
+          @if (cartItemQuantity() >= 1) {
+            <div class="border-t border-t-base-300 pt-4 mt-4 space-y-2">
+              <div class="flex items-center justify-between">
+                <span>Total Quantity</span>
+                <span class="text-lg font-bold">{{ cartItemQuantity() }}</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span>Total Amount</span>
+                <span class="text-lg font-bold">{{ totalPrice() }}</span>
+              </div>
             </div>
-            <div class="flex items-center justify-between">
-              <span>Total Amount</span>
-              <span class="text-lg font-bold">{{ totalPrice() }}</span>
-            </div>
-          </div>
-          <button class="btn btn-primary w-full mt-2" type="submit">
-            @if (!isLoading() && !isSuccess()) { Pay $
-            {{ totalPrice() }}
-            } @else if (!isLoading() && isSuccess()) { Checkout success } @else
-            { Processing your payment... }
-          </button>
+            <button class="btn btn-primary w-full mt-2" type="submit">
+              @if (!isLoading() && !isSuccess()) {
+                Pay $
+                {{ totalPrice() }}
+              } @else if (!isLoading() && isSuccess()) {
+                Checkout success
+              } @else {
+                Processing your payment...
+              }
+            </button>
           }
         </form>
       </div>
@@ -150,25 +154,27 @@ import { Meta, Title } from '@angular/platform-browser';
           item
         </p>
         <div>
-          @if(cartItemQuantity() >= 1) {
-          <div
-            class="mt-4 border border-gray-900 rounded-lg px-4 py-6 space-y-6 max-h-[calc(100dvh-200px)] overflow-y-auto"
-          >
-            @for(item of cartItems(); track item.id) {
+          @if (cartItemQuantity() >= 1) {
             <div
-              class="border-b border-b-gray-900 pb-5 last:pb-0 last:border-b-0"
+              class="mt-4 border border-gray-900 rounded-lg px-4 py-6 space-y-6 max-h-[calc(100dvh-200px)] overflow-y-auto"
             >
-              <app-shopping-cart-item [item]="item" />
+              @for (item of cartItems(); track item.id) {
+                <div
+                  class="border-b border-b-gray-900 pb-5 last:pb-0 last:border-b-0"
+                >
+                  <app-shopping-cart-item [item]="item" />
+                </div>
+              }
             </div>
-            }
-          </div>
           } @else {
-          <div class="mt-10 flex items-center justify-center flex-col gap-y-2">
-            <p class="text-xl text-center text-gray-400">
-              No item in your shopping cart
-            </p>
-            <a routerLink="/" class="btn btn-soft">Continue shopping</a>
-          </div>
+            <div
+              class="mt-10 flex items-center justify-center flex-col gap-y-2"
+            >
+              <p class="text-xl text-center text-gray-400">
+                No item in your shopping cart
+              </p>
+              <a routerLink="/" class="btn btn-soft">Continue shopping</a>
+            </div>
           }
         </div>
       </div>
@@ -194,7 +200,10 @@ import { Meta, Title } from '@angular/platform-browser';
   `,
 })
 export class ShoppingCartComponent {
-  constructor(private meta: Meta, private title: Title) {
+  constructor(
+    private meta: Meta,
+    private title: Title,
+  ) {
     this.title.setTitle('Shopping Cart');
     this.meta.updateTag({
       name: 'description',
@@ -216,10 +225,10 @@ export class ShoppingCartComponent {
   faExclamationCircle = faExclamationCircle;
 
   private readonly shoppingCartLocalStorageService = inject(
-    ShoppingCartLocalStorageService
+    ShoppingCartLocalStorageService,
   );
   private readonly paymentInfoLocalStorageService = inject(
-    PaymentInfoLocalStorageService
+    PaymentInfoLocalStorageService,
   );
 
   private readonly router = inject(Router);
@@ -229,15 +238,15 @@ export class ShoppingCartComponent {
   isSuccess = signal(false);
 
   private checkoutSuccessDialog = viewChild<ElementRef<HTMLDialogElement>>(
-    'checkoutSuccessDialog'
+    'checkoutSuccessDialog',
   );
 
   cartItems = computed(() => this.shoppingCartLocalStorageService.cartItems());
   cartItemQuantity = computed(() =>
-    this.shoppingCartLocalStorageService.cartItemQuantity()
+    this.shoppingCartLocalStorageService.cartItemQuantity(),
   );
   paymentInfoData = signal(
-    this.paymentInfoLocalStorageService.paymentInfoData()
+    this.paymentInfoLocalStorageService.paymentInfoData(),
   );
 
   totalPrice = computed(() => {
@@ -245,7 +254,7 @@ export class ShoppingCartComponent {
       this.cartItems().reduce((a, c) => {
         a += c?.price * c?.quantity!;
         return a;
-      }, 0)
+      }, 0),
     );
   });
 

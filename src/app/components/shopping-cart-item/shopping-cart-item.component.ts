@@ -46,12 +46,15 @@ import { ShoppingCartLocalStorageService } from '../../services/shopping-cart-lo
         </div>
       </div>
     </div>
+    <!-- <div class="flex justify-end mb-4">
+      <button (click)="clearCart()" class="btn btn-warning">Clear Cart</button>
+    </div> -->
   `,
   styles: ``,
 })
 export class ShoppingCartItemComponent {
   private readonly shoppingCartLocalStorageService = inject(
-    ShoppingCartLocalStorageService
+    ShoppingCartLocalStorageService,
   );
 
   faPlus = faPlus;
@@ -78,7 +81,13 @@ export class ShoppingCartItemComponent {
       });
     }
   }
-
+  // ShoppingCartComponent.ts
+  clearCart() {
+    const confirmed = confirm('Are you sure you want to clear the cart?');
+    if (confirmed) {
+      this.shoppingCartLocalStorageService.clearCart();
+    }
+  }
   removeItemQuantity() {
     this.shoppingCartLocalStorageService.removeItem(this.item()!);
   }
