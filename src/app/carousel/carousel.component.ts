@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-
-import { SlidersService, Slider } from '../services/sliders.service'; // <-- only this
+import { SlidersService } from '../services/sliders.service';
+import { Slider } from '../../type';
 
 @Component({
   selector: 'app-carousel',
@@ -35,6 +35,6 @@ export class CarouselComponent implements OnInit {
   }
 
   getImageUrl(path: string) {
-    return `https://sodtech.mn/${path}`;
+    return `https://sodtech.mn/admin/${path}`;
   }
 }

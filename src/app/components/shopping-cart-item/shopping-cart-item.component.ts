@@ -20,7 +20,7 @@ import { ProductService } from '../../services/product.service';
       <div class="w-full">
         <div class="space-y-1">
           <p class="font-bold">{{ item()?.name }}</p>
-          <p class="font-bold text-lg mt-auto">$ {{ item()?.price }}</p>
+          <p class="font-bold text-lg mt-auto">{{ item()?.price }}₮</p>
         </div>
         <div class="mt-3 flex items-center justify-between gap-x-4">
           <div class="flex items-center gap-x-2">

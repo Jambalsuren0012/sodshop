@@ -18,18 +18,28 @@ import { CarouselComponent } from '../../carousel/carousel.component';
     FooterComponent,
   ],
   template: `
-    <div class="mt-6 pb-10 px-6">
-      <ng-container *ngIf="isLoading(); else loaded">
+    <!-- HERO CAROUSEL -->
+    <section class="max-w-7xl mx-auto px-6 mt-40">
+      <app-carousel />
+    </section>
+
+    <!-- FEATURED PRODUCTS -->
+    <section class="max-w-7xl mx-auto px-6 mt-10">
+      <h2 class="text-2xl font-bold mb-6">Featured Products</h2>
+
+      <ng-container *ngIf="isLoading(); else products">
         <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 mx-auto max-w-7xl gap-6"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
-          <app-product-card-skeleton *ngFor="let item of [1, 2, 3, 4]" />
+          <app-product-card-skeleton
+            *ngFor="let item of [1, 2, 3, 4, 5, 6, 7, 8]"
+          />
         </div>
       </ng-container>
 
-      <ng-template #loaded>
+      <ng-template #products>
         <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 mx-auto max-w-7xl gap-6"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
           <app-product-card
             *ngFor="let product of productsResource.value()"
@@ -37,7 +47,41 @@ import { CarouselComponent } from '../../carousel/carousel.component';
           />
         </div>
       </ng-template>
-    </div>
+    </section>
+
+    <!-- PROMO BANNER -->
+    <section class="max-w-7xl mx-auto px-6 mt-12">
+      <div
+        class="rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white p-10 flex items-center justify-between"
+      >
+        <div>
+          <h2 class="text-3xl font-bold">Special Offer</h2>
+          <p class="mt-2 opacity-90">
+            Get up to 40% discount on selected products
+          </p>
+        </div>
+
+        <button
+          class="bg-white text-black px-6 py-3 rounded-lg font-semibold hover:scale-105 transition"
+        >
+          Shop Now
+        </button>
+      </div>
+    </section>
+
+    <!-- MORE PRODUCTS -->
+    <section class="max-w-7xl mx-auto px-6 mt-12 pb-16">
+      <h2 class="text-2xl font-bold mb-6">Latest Products</h2>
+
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+      >
+        <app-product-card
+          *ngFor="let product of productsResource.value()?.slice(0, 8)"
+          [product]="product"
+        />
+      </div>
+    </section>
 
     <app-footer />
   `,

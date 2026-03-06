@@ -83,4 +83,14 @@ export class ProductService {
 
     return `${environment.imgBase}/${cleanPath}`;
   }
+  async getLatestProducts(): Promise<Product[]> {
+    const res = await fetch(this.url);
+    const json = await res.json();
+
+    const products = json.data;
+
+    return products
+      .sort((a: any, b: any) => b.id - a.id) // newest first
+      .slice(0, 4); // only 4
+  }
 }

@@ -8,9 +8,13 @@ import { FavoriteItemsComponent } from './pages/favorite-items/favorite-items.co
 import { BaraaComponent } from './pages/baraa/baraa.component';
 import { adminGuard } from './guards/admin.guard';
 import { LoginComponent } from './login/login.component';
+import { CategoryComponent } from './pages/category/category.component';
 
 export const routes: Routes = [
-  { path: '', title: 'Home', component: HomeComponent },
+  {
+    path: '',
+    component: HomeComponent,
+  },
   {
     path: 'favorite-items',
     title: 'Favorite Items',
@@ -21,6 +25,8 @@ export const routes: Routes = [
     title: 'login',
     component: LoginComponent,
   },
+  { path: 'category/:id', component: CategoryComponent },
+
   {
     path: 'admin',
     canActivate: [adminGuard],
