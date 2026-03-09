@@ -19,13 +19,13 @@ import { CarouselComponent } from '../../carousel/carousel.component';
   ],
   template: `
     <!-- HERO CAROUSEL -->
-    <section class="max-w-7xl mx-auto px-6 mt-40">
-      <app-carousel />
+    <section class="w-full mt-10">
+      <app-carousel></app-carousel>
     </section>
 
     <!-- FEATURED PRODUCTS -->
     <section class="max-w-7xl mx-auto px-6 mt-10">
-      <h2 class="text-2xl font-bold mb-6">Featured Products</h2>
+      <h2 class="text-2xl font-bold mb-6">Санал болгох бараа</h2>
 
       <ng-container *ngIf="isLoading(); else products">
         <div
@@ -71,7 +71,7 @@ import { CarouselComponent } from '../../carousel/carousel.component';
 
     <!-- MORE PRODUCTS -->
     <section class="max-w-7xl mx-auto px-6 mt-12 pb-16">
-      <h2 class="text-2xl font-bold mb-6">Latest Products</h2>
+      <h2 class="text-2xl font-bold mb-6">Шинээр Нэмэгдсэн Бүтээгдэхүүн</h2>
 
       <div
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
