@@ -9,11 +9,16 @@ import { BaraaComponent } from './pages/baraa/baraa.component';
 import { adminGuard } from './guards/admin.guard';
 import { LoginComponent } from './login/login.component';
 import { CategoryComponent } from './pages/category/category.component';
+import { ProfileComponent } from './profile/profile.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
   },
   {
     path: 'favorite-items',

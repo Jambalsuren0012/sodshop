@@ -38,7 +38,10 @@ import { ProductService } from '../../services/product.service';
       </button>
 
       <!-- Product Image -->
-      <div class="flex justify-center items-center h-[220px] mb-4">
+      <div
+        class="flex justify-center items-center h-[220px] mb-4"
+        (click)="onClickNavigate()"
+      >
         <img
           [src]="imageUrl() || 'assets/imgs/no-image.png'"
           class="max-h-full object-contain"
@@ -61,9 +64,29 @@ import { ProductService } from '../../services/product.service';
         {{ product()?.name }}
       </h3>
 
-      <!-- Price -->
-      <div class="mt-2 text-2xl font-bold text-black">
-        {{ product()?.price | number }}₮
+      <!-- PRICE -->
+
+      <div class="mt-2">
+        <!-- Discount price -->
+        <div
+          *ngIf="product()?.discount_price; else normalPrice"
+          class="flex items-center gap-3"
+        >
+          <span class="text-2xl font-bold text-sky-900">
+            {{ product()?.discount_price | number }}₮
+          </span>
+
+          <span class="text-gray-400 line-through">
+            {{ product()?.price | number }}₮
+          </span>
+        </div>
+
+        <!-- Normal price -->
+        <ng-template #normalPrice>
+          <span class="text-2xl font-bold text-black">
+            {{ product()?.price | number }}₮
+          </span>
+        </ng-template>
       </div>
 
       <!-- Shipping -->

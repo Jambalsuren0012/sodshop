@@ -6,6 +6,8 @@ import { ProductCardSkeletonComponent } from '../../components/product-card-skel
 import { Meta, Title } from '@angular/platform-browser';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CarouselComponent } from '../../carousel/carousel.component';
+import { BrandComponent } from '../../brand/brand.component';
+import { FeaturedProductComponent } from '../../featured-product/featured-product.component';
 
 @Component({
   selector: 'app-home',
@@ -16,11 +18,16 @@ import { CarouselComponent } from '../../carousel/carousel.component';
     ProductCardComponent,
     ProductCardSkeletonComponent,
     FooterComponent,
+    BrandComponent,
+    FeaturedProductComponent,
   ],
   template: `
     <!-- HERO CAROUSEL -->
-    <section class="w-full mt-10">
+    <section class="w-full ">
       <app-carousel></app-carousel>
+    </section>
+    <section class="w-full ">
+      <app-brand></app-brand>
     </section>
 
     <!-- FEATURED PRODUCTS -->
@@ -47,6 +54,9 @@ import { CarouselComponent } from '../../carousel/carousel.component';
           />
         </div>
       </ng-template>
+    </section>
+    <section class="w-full ">
+      <app-featured-product></app-featured-product>
     </section>
 
     <!-- PROMO BANNER -->
@@ -82,8 +92,6 @@ import { CarouselComponent } from '../../carousel/carousel.component';
         />
       </div>
     </section>
-
-    <app-footer />
   `,
 })
 export class HomeComponent {

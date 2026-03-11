@@ -9,7 +9,7 @@ import { ProductService } from '../../services/product.service';
   selector: 'app-shopping-cart-item',
   imports: [FontAwesomeModule],
   template: `
-    <div class="flex items-start justify-start gap-x-4">
+    <div class="flex items-start justify-start gap-x-4 relative z-0">
       <figure>
         <img
           class="h-[130px] w-[140px] object-fill"

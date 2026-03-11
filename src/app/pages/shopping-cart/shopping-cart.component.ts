@@ -27,15 +27,13 @@ import { Meta, Title } from '@angular/platform-browser';
   template: `
     <div class="mx-auto flex flex-col-reverse lg:flex-row gap-x-20 min-h-full">
       <div class="w-full py-14 lg:py-0 lg:pb-0 lg:pt-28 px-6 lg:pl-24 lg:pr-8">
-        <h2 class="text-xl font-bold uppercase">Payment Detail</h2>
-        <p>
-          Complete your purchase item by providing your payment details order
-        </p>
+        <h2 class="text-xl font-bold uppercase">Төлбөрийн мэдээлэл</h2>
+        <p>Төлбөрөө хийхийн тулд мэдээллээ оруулна уу</p>
         <form (submit)="simulateCheckoutProcessing($event)">
           <!-- Shipping Address -->
           <fieldset class="mt-4 fieldset px-0 p-4">
             <legend class="fieldset-legend text-lg uppercase">
-              Shipping Address
+              Хүргэлтийн хаяг
             </legend>
             <textarea
               type="text"
@@ -49,24 +47,24 @@ import { Meta, Title } from '@angular/platform-browser';
           <!-- Payment Method -->
           <fieldset class="mt-1 fieldset px-0 p-4">
             <legend class="fieldset-legend text-lg uppercase">
-              Payment Method
+              Төлбөрийн карт
             </legend>
 
             <div class="space-y-4">
               <div class="w-full space-y-2">
-                <label class="fieldset-label">Card Number</label>
+                <label class="fieldset-label">Картны дугаар</label>
                 <input
                   type="number"
                   required
                   class="input validator w-full"
                   [value]="paymentInfoData()?.cardNumber"
                   (change)="handleInputChange($event, 'cardNumber')"
-                  placeholder="Enter your card number"
+                  placeholder="Картны дугаар оруулна уу"
                 />
               </div>
               <div class="flex items-center gap-x-2 w-full">
                 <div class="w-full space-y-2">
-                  <label class="fieldset-label">Expiration Date</label>
+                  <label class="fieldset-label">Хүчинтэй хугацаа</label>
                   <input
                     type="number"
                     required
@@ -89,14 +87,14 @@ import { Meta, Title } from '@angular/platform-browser';
                 </div>
               </div>
               <div class="w-full space-y-2">
-                <label class="fieldset-label">Name on Card</label>
+                <label class="fieldset-label">Карт эзэмшигчийн нэр</label>
                 <input
                   required
                   type="text"
                   [value]="paymentInfoData()?.nameOnCard ?? ''"
                   (change)="handleInputChange($event, 'nameOnCard')"
                   class="input w-full validator"
-                  placeholder="Enter your name"
+                  placeholder="Нэрээ оруулна уу"
                 />
               </div>
             </div>
@@ -109,13 +107,13 @@ import { Meta, Title } from '@angular/platform-browser';
                 [checked]="rememberPaymentInfo()"
                 class="checkbox"
               />
-              Remember payment information
+              Төлбөрийн мэдээллийг хадгалах
             </label>
             <div class="tooltip tooltip-left">
               <div class="tooltip-content">
                 <div class="text-sm w-[250px]">
-                  Only save these information in your browser and does not send
-                  to anywhere. This entire app only run on client-side
+                  Мэдээллийг зөвхөн таны браузерт хадгална, сервер рүү
+                  илгээгдэхгүй
                 </div>
               </div>
               <fa-icon [icon]="faExclamationCircle"></fa-icon>
@@ -124,22 +122,22 @@ import { Meta, Title } from '@angular/platform-browser';
           @if (cartItemQuantity() >= 1) {
             <div class="border-t border-t-base-300 pt-4 mt-4 space-y-2">
               <div class="flex items-center justify-between">
-                <span>Total Quantity</span>
+                <span>Тоо ширхэг</span>
                 <span class="text-lg font-bold">{{ cartItemQuantity() }}</span>
               </div>
               <div class="flex items-center justify-between">
-                <span>Total Amount</span>
+                <span>Нийт дүн</span>
                 <span class="text-lg font-bold">{{ totalPrice() }}</span>
               </div>
             </div>
             <button class="btn btn-primary w-full mt-2" type="submit">
               @if (!isLoading() && !isSuccess()) {
-                Pay $
+                Төлөх
                 {{ totalPrice() }}
               } @else if (!isLoading() && isSuccess()) {
-                Checkout success
+                Амжилттай төлөв
               } @else {
-                Processing your payment...
+                Төлбөр боловсруулах...
               }
             </button>
           }
@@ -148,11 +146,8 @@ import { Meta, Title } from '@angular/platform-browser';
       <div
         class="w-full pb-14 lg:pb-0 lg:py-0 pt-28 lg:pt-28 px-6 lg:pr-24 lg:pl-8"
       >
-        <h2 class="text-xl font-bold uppercase">Summary Order</h2>
-        <p>
-          Check your item and select your shipping for better experience order
-          item
-        </p>
+        <h2 class="text-xl font-bold uppercase">Захиалгын тойм</h2>
+        <p>Бараагаа шалгаж, хүргэлтийн тохиргоо сонгоно уу</p>
         <div>
           @if (cartItemQuantity() >= 1) {
             <div
@@ -188,12 +183,10 @@ import { Meta, Title } from '@angular/platform-browser';
             class="text-6xl text-emerald-500"
           ></fa-icon>
         </div>
-        <h3 class="text-xl font-bold text-center">
-          Thank you for your purchase
-        </h3>
+        <h3 class="text-xl font-bold text-center">Таны захиалга амжилттай</h3>
         <div class="modal-action">
           <form method="dialog">
-            <button (click)="closeDialog()" class="btn btn-sm">Close</button>
+            <button (click)="closeDialog()" class="btn btn-sm">Хаах</button>
           </form>
         </div>
       </div>
@@ -251,14 +244,17 @@ export class ShoppingCartComponent {
   );
 
   totalPrice = computed(() => {
-    return new Intl.NumberFormat('en-IN').format(
-      this.cartItems().reduce((a, c) => {
-        a += c?.price * c?.stock!;
-        return a;
-      }, 0),
-    );
-  });
+    const total = this.cartItems().reduce((a, c) => {
+      return a + (c?.price || 0) * (c?.stock || 0);
+    }, 0);
 
+    // Монгол төгрөг форматтай
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'MNT', // төгрөгийн тэмдэг
+      minimumFractionDigits: 0, // хэрвээ копейк харуулахгүй бол
+    }).format(total);
+  });
   simulateCheckoutProcessing(event: Event) {
     event.preventDefault();
 

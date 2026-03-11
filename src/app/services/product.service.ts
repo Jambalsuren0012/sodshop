@@ -20,13 +20,19 @@ export class ProductService {
      GET ALL PRODUCTS
   ========================================== */
   async getProducts(category?: string): Promise<Product[]> {
-    const response = await fetch(
-      category ? `${this.url}?category=${category}` : this.url,
-    );
+    const response = await fetch(this.url);
 
     const json: ApiResponse = await response.json();
 
-    return (json.data ?? []).map((item: any) => ({
+    let products = json.data ?? [];
+
+    if (category) {
+      products = products.filter(
+        (p: any) => String(p.category?.id) === String(category),
+      );
+    }
+
+    return products.map((item: any) => ({
       ...item,
       image: this.getImageUrl(item.images?.main),
     }));

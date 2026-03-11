@@ -73,3 +73,21 @@ export interface CategoryApiResponse {
     total_pages: number;
   };
 }
+export interface User {
+  id: number;
+  fname: string;
+  lname: string;
+  email: string;
+  phone: string;
+  role: string;
+  status: number;
+  created_at: string;
+
+  address: {
+    city: string | null;
+    district: string | null;
+    khoroo: string | null;
+    detail: string | null;
+    label: string | null;
+  };
+}

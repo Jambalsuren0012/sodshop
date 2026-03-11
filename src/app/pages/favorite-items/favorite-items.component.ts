@@ -9,18 +9,17 @@ import { FooterComponent } from '../../components/footer/footer.component';
   imports: [ProductCardComponent, FooterComponent],
   template: `
     <div class="mt-28 pb-10 max-w-7xl px-6 mx-auto">
-      <h2 class="text-xl font-bold uppercase">Your Favorite Items</h2>
+      <h2 class="text-xl font-bold uppercase">Хадгалсан бараа</h2>
       @if (favoriteItems().length > 0) {
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 mx-auto max-w-7xl gap-6 mt-8"
-      >
-        @for (product of favoriteItems(); track product.id) {
-        <app-product-card [product]="product" />
-        }
-      </div>
-
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 mx-auto max-w-7xl gap-6 mt-8"
+        >
+          @for (product of favoriteItems(); track product.id) {
+            <app-product-card [product]="product" />
+          }
+        </div>
       } @else {
-      <p class="text-lg text-center mt-10">No favorite item</p>
+        <p class="text-lg text-center mt-10">Хадгалсан бараа байхгүй байна</p>
       }
     </div>
     <app-footer />
@@ -28,7 +27,10 @@ import { FooterComponent } from '../../components/footer/footer.component';
   styles: ``,
 })
 export class FavoriteItemsComponent {
-  constructor(private meta: Meta, private title: Title) {
+  constructor(
+    private meta: Meta,
+    private title: Title,
+  ) {
     this.title.setTitle('Favorite Items');
     this.meta.updateTag({
       name: 'description',
@@ -44,10 +46,10 @@ export class FavoriteItemsComponent {
   }
 
   private readonly favoriteItemsLocalStorageService = inject(
-    FavoriteItemsLocalStorageService
+    FavoriteItemsLocalStorageService,
   );
 
   favoriteItems = computed(() =>
-    this.favoriteItemsLocalStorageService.favoriteItems()
+    this.favoriteItemsLocalStorageService.favoriteItems(),
   );
 }

@@ -37,41 +37,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
     FooterComponent,
   ],
   template: `
-    <div class="min-h-full">
+    <div class="min-h-full mt-10">
       <div class="mx-auto pt-24 pb-10 px-6 max-w-7xl">
-        <!-- FAVORITE + NAV -->
-        <div
-          class="border-y border-y-base-300 flex gap-x-2 justify-end py-2 mb-8"
-        >
-          <button
-            (click)="toggleFavoriteItem()"
-            [ngClass]="
-              checkFavoriteItemAlreadyExist()
-                ? 'btn btn-soft btn-primary btn-md'
-                : 'btn btn-soft btn-md'
-            "
-          >
-            <fa-icon [icon]="faHeart"></fa-icon>
-          </button>
-
-          <div class="flex items-center gap-x-2">
-            <button
-              [disabled]="isFirstItem()"
-              (click)="handlePrevNavigation()"
-              class="btn btn-ghost btn-md"
-            >
-              <fa-icon [icon]="faChevronLeft"></fa-icon>
-            </button>
-            <button
-              [disabled]="isLastItem()"
-              (click)="handleNextNavigation()"
-              class="btn btn-ghost btn-md"
-            >
-              <fa-icon [icon]="faChevronRight"></fa-icon>
-            </button>
-          </div>
-        </div>
-
         <!-- MAIN CONTENT -->
         <div
           class="flex flex-col-reverse lg:flex-row gap-y-10 justify-between gap-x-10"
@@ -97,15 +64,12 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
               <!-- Thumbnails -->
               <div class="flex gap-2 overflow-x-auto">
-                <ng-container
-                  *ngFor="let img of productResource.value()?.images?.gallery"
-                >
-                  <img
-                    class="w-24 h-24 object-cover cursor-pointer border-2 border-transparent hover:border-primary rounded"
-                    [src]="productService.getImageUrl(img)"
-                    (click)="selectedImage = productService.getImageUrl(img)"
-                  />
-                </ng-container>
+                <img
+                  *ngFor="let img of thumbnails()"
+                  class="w-24 h-24 object-cover cursor-pointer border-2 border-transparent hover:border-primary rounded"
+                  [src]="productService.getImageUrl(img)"
+                  (click)="selectedImage = productService.getImageUrl(img)"
+                />
               </div>
             </ng-template>
           </div>
@@ -155,7 +119,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
                       [disabled]="
                         quantity() >= (productResource.value()?.stock ?? 0)
                       "
-                      class="text-lg font-bold text-orange-500"
+                      class="text-lg font-bold text-sky-400"
                     >
                       +
                     </button>
@@ -181,7 +145,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
                   <!-- Buy Now -->
                   <button
                     (click)="buyNow()"
-                    class="flex-1 btn bg-orange-500 text-white rounded-full border-0 hover:bg-orange-600"
+                    class="flex-1 btn bg-sky-500 text-white rounded-full border-0 hover:bg-sky-600"
                   >
                     Худалдан авах
                   </button>
@@ -220,8 +184,6 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
         </ng-template>
       </div>
     </div>
-
-    <app-footer></app-footer>
   `,
 })
 export class ProductDetailComponent implements OnInit {
@@ -230,6 +192,7 @@ export class ProductDetailComponent implements OnInit {
   faHeart = faHeart;
   faChevronLeft = faChevronLeft;
 
+  Boolean = Boolean;
   productId = signal<string>('');
   selectedImage: string | null = null;
 
@@ -284,12 +247,16 @@ export class ProductDetailComponent implements OnInit {
     });
 
     this.route.paramMap.subscribe((param) => {
-      this.productId.set(param.get('id')!);
+      const id = param.get('id');
+      if (!id) return; // null бол function-оос гарах
+      this.productId.set(id);
       // Set first gallery image once loaded
       effect(() => {
-        const gallery = this.productResource.value()?.images?.gallery;
-        if (gallery?.length)
-          this.selectedImage = this.productService.getImageUrl(gallery[0]);
+        const images = this.productResource.value()?.images;
+
+        if (images?.main) {
+          this.selectedImage = this.productService.getImageUrl(images.main);
+        }
       });
     });
   }
@@ -338,6 +305,10 @@ export class ProductDetailComponent implements OnInit {
       );
     }
   }
+  get allImages() {
+    const images = this.productResource.value()?.images;
+    return [images?.main, ...(images?.gallery || [])].filter(Boolean);
+  }
 
   getSafeDescription(): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(
@@ -372,5 +343,15 @@ export class ProductDetailComponent implements OnInit {
     const main = this.productResource.value()?.images?.main;
     if (main) return this.productService.getImageUrl(main);
     return 'assets/imgs/no-image.png';
+  });
+
+  thumbnails = computed(() => {
+    const images = this.productResource.value()?.images;
+
+    if (!images) return [];
+
+    return [images.main, ...(images.gallery || [])].filter(
+      (img): img is string => img !== null && img !== undefined,
+    );
   });
 }
