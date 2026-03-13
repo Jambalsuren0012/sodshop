@@ -22,7 +22,6 @@ import { FooterComponent } from '../../components/footer/footer.component';
         <p class="text-lg text-center mt-10">Хадгалсан бараа байхгүй байна</p>
       }
     </div>
-    <app-footer />
   `,
   styles: ``,
 })

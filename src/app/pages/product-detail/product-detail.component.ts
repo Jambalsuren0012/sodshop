@@ -37,39 +37,51 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
     FooterComponent,
   ],
   template: `
-    <div class="min-h-full mt-10">
-      <div class="mx-auto pt-24 pb-10 px-6 max-w-7xl">
-        <!-- MAIN CONTENT -->
+    <div
+      class="min-h-full mt-10 bg-gradient-to-b from-sky-50/40 via-white to-white"
+    >
+      <!-- PRODUCT DETAIL -->
+      <div class="mx-auto pt-20 pb-12 px-6 max-w-7xl">
         <div
-          class="flex flex-col-reverse lg:flex-row gap-y-10 justify-between gap-x-10"
+          class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-start"
         >
           <!-- IMAGE GALLERY -->
-          <div class="w-full md:w-[70%]">
+          <div class="w-full">
             <ng-container
               *ngIf="productResource.isLoading(); else galleryLoaded"
             >
-              <figure>
-                <div class="w-full h-[350px] md:h-[550px] skeleton"></div>
-              </figure>
+              <div
+                class="bg-white rounded-3xl border border-sky-100 shadow-sm p-4 md:p-6"
+              >
+                <div
+                  class="w-full h-[350px] md:h-[550px] skeleton rounded-2xl"
+                ></div>
+              </div>
             </ng-container>
 
             <ng-template #galleryLoaded>
-              <figure>
-                <img
-                  class="w-full h-[350px] md:h-[550px] object-contain mb-4"
-                  [src]="selectedImage || imageUrl()"
-                  [alt]="productResource.value()?.name"
-                />
-              </figure>
+              <div
+                class="bg-white rounded-3xl border border-sky-100 shadow-[0_10px_40px_rgba(14,165,233,0.08)] p-4 md:p-6"
+              >
+                <figure
+                  class="rounded-2xl bg-sky-50/50 flex items-center justify-center overflow-hidden"
+                >
+                  <img
+                    class="w-full h-[350px] md:h-[550px] object-contain mb-4"
+                    [src]="selectedImage || imageUrl()"
+                    [alt]="productResource.value()?.name"
+                  />
+                </figure>
 
-              <!-- Thumbnails -->
-              <div class="flex gap-2 overflow-x-auto">
-                <img
-                  *ngFor="let img of thumbnails()"
-                  class="w-24 h-24 object-cover cursor-pointer border-2 border-transparent hover:border-primary rounded"
-                  [src]="productService.getImageUrl(img)"
-                  (click)="selectedImage = productService.getImageUrl(img)"
-                />
+                <!-- Thumbnails -->
+                <div class="flex gap-3 overflow-x-auto pt-2 pb-1 mt-2">
+                  <img
+                    *ngFor="let img of thumbnails()"
+                    class="w-20 h-20 md:w-24 md:h-24 shrink-0 object-cover cursor-pointer rounded-2xl border-2 border-sky-100 bg-white p-1 hover:border-sky-400 hover:shadow-md transition"
+                    [src]="productService.getImageUrl(img)"
+                    (click)="selectedImage = productService.getImageUrl(img)"
+                  />
+                </div>
               </div>
             </ng-template>
           </div>
@@ -77,75 +89,131 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
           <!-- PRODUCT INFO -->
           <div class="w-full">
             <ng-container *ngIf="productResource.isLoading(); else infoLoaded">
-              <div class="skeleton w-full h-[40px]"></div>
-              <div class="skeleton w-[100px] mt-3 h-[20px]"></div>
-              <div class="skeleton w-full mt-4 h-[150px]"></div>
-              <div class="skeleton w-full mt-8 h-[50px]"></div>
+              <div
+                class="bg-white rounded-3xl border border-sky-100 shadow-sm p-6"
+              >
+                <div class="skeleton w-3/4 h-[36px] rounded-xl"></div>
+                <div class="skeleton w-[120px] mt-4 h-[22px] rounded-xl"></div>
+                <div class="skeleton w-full mt-6 h-[140px] rounded-2xl"></div>
+                <div class="skeleton w-full mt-8 h-[56px] rounded-full"></div>
+              </div>
             </ng-container>
 
             <ng-template #infoLoaded>
-              <h2 class="text-2xl font-bold mb-3">
-                {{ productResource.value()?.name }}
-              </h2>
-              <h3 class="text-3xl font-bold">
-                {{ productResource.value()?.price }} ₮
-              </h3>
-              <p class="leading-6 mt-4" [innerHTML]="getSafeDescription()"></p>
-              <div class="badge badge-outline capitalize mt-2">
-                {{ productResource.value()?.category?.name || 'No Category' }}
-              </div>
-
-              <div class="mt-6 space-y-6">
-                <!-- Quantity + Stock -->
-                <div class="flex items-center justify-between">
-                  <!-- Quantity Selector -->
-                  <div
-                    class="flex items-center bg-base-200 rounded-full px-4 py-2 gap-4"
-                  >
-                    <button
-                      (click)="decreaseQuantity()"
-                      [disabled]="quantity() <= 1"
-                      class="text-lg font-bold text-gray-500"
+              <div
+                class="bg-white rounded-3xl border border-sky-100 shadow-[0_10px_40px_rgba(14,165,233,0.08)] p-6 md:p-8"
+              >
+                <!-- Top -->
+                <div class="flex items-start justify-between gap-4 flex-wrap">
+                  <div>
+                    <div
+                      class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-100 text-sky-700 text-sm font-semibold border border-sky-200"
                     >
-                      -
-                    </button>
+                      <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+                      {{
+                        productResource.value()?.category?.name || 'No Category'
+                      }}
+                    </div>
 
-                    <span class="text-lg font-semibold w-6 text-center">
-                      {{ quantity() }}
-                    </span>
-
-                    <button
-                      (click)="increaseQuantity()"
-                      [disabled]="
-                        quantity() >= (productResource.value()?.stock ?? 0)
-                      "
-                      class="text-lg font-bold text-sky-400"
+                    <h2
+                      class="text-2xl md:text-3xl font-bold text-slate-800 mt-4 leading-snug"
                     >
-                      +
-                    </button>
+                      {{ productResource.value()?.name }}
+                    </h2>
                   </div>
 
-                  <!-- Stock -->
-                  <span class="text-sm text-gray-400">
-                    {{ productResource.value()?.stock }} үлдэгдэл
+                  <div
+                    class="px-5 py-3 rounded-2xl bg-sky-50 border border-sky-100"
+                  >
+                    <h3
+                      class="text-2xl md:text-3xl font-extrabold text-sky-600"
+                    >
+                      {{ productResource.value()?.price }} ₮
+                    </h3>
+                  </div>
+                </div>
+
+                <!-- Stock Info -->
+                <div
+                  class="mt-6 flex items-center justify-between rounded-2xl bg-slate-50 border border-slate-200 px-4 py-3"
+                >
+                  <span class="text-sm md:text-base text-slate-600 font-medium">
+                    Агуулах дахь үлдэгдэл
+                  </span>
+                  <span
+                    class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-sm font-semibold border border-emerald-100"
+                  >
+                    {{ productResource.value()?.stock }} ширхэг
                   </span>
                 </div>
 
+                <!-- Description -->
+                <div class="mt-6">
+                  <h4 class="text-lg font-bold text-slate-800 mb-3">
+                    Бүтээгдэхүүний тайлбар
+                  </h4>
+                  <div
+                    class="text-slate-600 leading-7 text-sm md:text-base bg-sky-50/40 border border-sky-100 rounded-2xl p-4 md:p-5"
+                    [innerHTML]="getSafeDescription()"
+                  ></div>
+                </div>
+
+                <!-- Quantity -->
+                <div class="mt-8">
+                  <h4 class="text-lg font-bold text-slate-800 mb-3">
+                    Тоо ширхэг
+                  </h4>
+
+                  <div
+                    class="flex flex-wrap items-center gap-4 justify-between"
+                  >
+                    <div
+                      class="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-3 py-2 shadow-sm"
+                    >
+                      <button
+                        (click)="decreaseQuantity()"
+                        [disabled]="quantity() <= 1"
+                        class="w-10 h-10 rounded-full bg-white border border-sky-100 text-slate-600 text-xl font-bold hover:bg-sky-100 transition disabled:opacity-40"
+                      >
+                        -
+                      </button>
+
+                      <span
+                        class="w-14 text-center text-lg font-bold text-slate-800"
+                      >
+                        {{ quantity() }}
+                      </span>
+
+                      <button
+                        (click)="increaseQuantity()"
+                        [disabled]="
+                          quantity() >= (productResource.value()?.stock ?? 0)
+                        "
+                        class="w-10 h-10 rounded-full bg-sky-500 text-white text-xl font-bold hover:bg-sky-600 transition disabled:opacity-40"
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    <div class="text-sm text-slate-500">
+                      Сонгосон тоо хэмжээг өөрчилж болно
+                    </div>
+                  </div>
+                </div>
+
                 <!-- Buttons -->
-                <div class="flex gap-4">
-                  <!-- Add to Cart -->
+                <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <button
                     (click)="addItem()"
                     [disabled]="checkItemAlreadyExist()"
-                    class="flex-1 btn bg-gray-300 text-black rounded-full border-0 hover:bg-gray-400"
+                    class="h-14 rounded-full font-semibold border border-sky-200 bg-white text-sky-700 hover:bg-sky-50 hover:border-sky-300 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                   >
                     Сагслах
                   </button>
 
-                  <!-- Buy Now -->
                   <button
                     (click)="buyNow()"
-                    class="flex-1 btn bg-sky-500 text-white rounded-full border-0 hover:bg-sky-600"
+                    class="h-14 rounded-full font-semibold bg-sky-500 text-white hover:bg-sky-600 transition shadow-[0_10px_25px_rgba(14,165,233,0.25)]"
                   >
                     Худалдан авах
                   </button>
@@ -157,14 +225,24 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
       </div>
 
       <!-- SIMILAR PRODUCTS -->
-      <div class="mx-auto pt-28 pb-10 px-6 max-w-7xl">
-        <h3 class="text-2xl font-bold mb-8">Адил төстэй бүтээгдэхүүнүүд</h3>
+      <div class="mx-auto pt-10 pb-14 px-6 max-w-7xl">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h3 class="text-2xl md:text-3xl font-bold text-slate-800">
+              Адил төстэй бүтээгдэхүүнүүд
+            </h3>
+            <p class="text-slate-500 mt-1 text-sm md:text-base">
+              Танд санал болгох ижил төрлийн бүтээгдэхүүнүүд
+            </p>
+          </div>
+          <div class="hidden md:block w-20 h-1 rounded-full bg-sky-400"></div>
+        </div>
 
         <ng-container
           *ngIf="isLoadingSimilarProductResource(); else similarLoaded"
         >
           <div
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6"
           >
             <app-product-card-skeleton
               *ngFor="let i of [1, 2, 3, 4]"
@@ -174,7 +252,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
         <ng-template #similarLoaded>
           <div
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6"
           >
             <app-product-card
               *ngFor="let similarProduct of similarProductResource.value()"

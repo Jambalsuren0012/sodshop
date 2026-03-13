@@ -7,9 +7,10 @@ import { ProductDetailComponent } from './pages/product-detail/product-detail.co
 import { FavoriteItemsComponent } from './pages/favorite-items/favorite-items.component';
 import { BaraaComponent } from './pages/baraa/baraa.component';
 import { adminGuard } from './guards/admin.guard';
-import { LoginComponent } from './login/login.component';
+
 import { CategoryComponent } from './pages/category/category.component';
 import { ProfileComponent } from './profile/profile.component';
+import { AuthComponent } from './login/login.component';
 
 export const routes: Routes = [
   {
@@ -27,8 +28,7 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    title: 'login',
-    component: LoginComponent,
+    component: AuthComponent,
   },
   { path: 'category/:id', component: CategoryComponent },
 

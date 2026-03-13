@@ -25,115 +25,171 @@ import { Meta, Title } from '@angular/platform-browser';
   selector: 'app-shopping-cart',
   imports: [FontAwesomeModule, ShoppingCartItemComponent, RouterLink],
   template: `
-    <div class="mx-auto flex flex-col-reverse lg:flex-row gap-x-20 min-h-full">
-      <div class="w-full py-14 lg:py-0 lg:pb-0 lg:pt-28 px-6 lg:pl-24 lg:pr-8">
-        <h2 class="text-xl font-bold uppercase">Төлбөрийн мэдээлэл</h2>
-        <p>Төлбөрөө хийхийн тулд мэдээллээ оруулна уу</p>
-        <form (submit)="simulateCheckoutProcessing($event)">
+    <div
+      class="mx-auto max-w-7xl px-6 lg:px-8 py-10 lg:py-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 bg-gradient-to-b from-sky-50/40 via-white to-white"
+    >
+      <!-- LEFT: PAYMENT INFO -->
+      <div
+        class="bg-white border border-sky-100 rounded-3xl shadow-[0_10px_40px_rgba(14,165,233,0.08)] p-6 md:p-8 h-fit"
+      >
+        <div class="mb-8">
+          <div
+            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-100 text-sky-700 text-sm font-semibold border border-sky-200"
+          >
+            <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+            Төлбөр хийх
+          </div>
+
+          <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mt-4">
+            Төлбөрийн мэдээлэл
+          </h2>
+          <p class="text-slate-500 mt-2">
+            Төлбөрөө хийхийн тулд мэдээллээ зөв оруулна уу
+          </p>
+        </div>
+
+        <form (submit)="simulateCheckoutProcessing($event)" class="space-y-6">
           <!-- Shipping Address -->
-          <fieldset class="mt-4 fieldset px-0 p-4">
-            <legend class="fieldset-legend text-lg uppercase">
+          <div
+            class="rounded-2xl border border-sky-100 bg-sky-50/40 p-4 md:p-5"
+          >
+            <h3 class="text-lg font-bold text-slate-800 mb-3">
               Хүргэлтийн хаяг
-            </legend>
+            </h3>
+
             <textarea
-              type="text"
               required
-              class="input validator w-full min-h-[80px]"
-              placeholder="your address..."
+              class="w-full min-h-[110px] rounded-2xl border border-sky-200 bg-white px-4 py-3 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100 transition resize-none text-slate-700"
+              placeholder="Хаягаа оруулна уу..."
               (change)="handleInputChange($event, 'address')"
               >{{ paymentInfoData()?.address || '' }}</textarea
             >
-          </fieldset>
+          </div>
+
           <!-- Payment Method -->
-          <fieldset class="mt-1 fieldset px-0 p-4">
-            <legend class="fieldset-legend text-lg uppercase">
+          <div
+            class="rounded-2xl border border-sky-100 bg-sky-50/40 p-4 md:p-5"
+          >
+            <h3 class="text-lg font-bold text-slate-800 mb-4">
               Төлбөрийн карт
-            </legend>
+            </h3>
 
             <div class="space-y-4">
-              <div class="w-full space-y-2">
-                <label class="fieldset-label">Картны дугаар</label>
+              <div>
+                <label class="block text-sm font-medium text-slate-600 mb-2">
+                  Картны дугаар
+                </label>
                 <input
-                  type="number"
+                  type="text"
                   required
-                  class="input validator w-full"
+                  class="w-full h-12 rounded-2xl border border-sky-200 bg-white px-4 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100 transition text-slate-700"
                   [value]="paymentInfoData()?.cardNumber"
                   (change)="handleInputChange($event, 'cardNumber')"
-                  placeholder="Картны дугаар оруулна уу"
+                  placeholder="1234 5678 9012 3456"
                 />
               </div>
-              <div class="flex items-center gap-x-2 w-full">
-                <div class="w-full space-y-2">
-                  <label class="fieldset-label">Хүчинтэй хугацаа</label>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-slate-600 mb-2">
+                    Хүчинтэй хугацаа
+                  </label>
                   <input
-                    type="number"
+                    type="text"
                     required
                     [value]="paymentInfoData()?.expirationDate"
                     (change)="handleInputChange($event, 'expirationDate')"
-                    class="input w-full validator"
+                    class="w-full h-12 rounded-2xl border border-sky-200 bg-white px-4 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100 transition text-slate-700"
                     placeholder="MM/YY"
                   />
                 </div>
-                <div class="w-full space-y-2">
-                  <label class="fieldset-label">CVV</label>
+
+                <div>
+                  <label class="block text-sm font-medium text-slate-600 mb-2">
+                    CVV
+                  </label>
                   <input
-                    type="number"
+                    type="text"
                     required
                     [value]="paymentInfoData()?.cvv"
                     (change)="handleInputChange($event, 'cvv')"
-                    class="input w-full validator"
-                    placeholder="XXX"
+                    class="w-full h-12 rounded-2xl border border-sky-200 bg-white px-4 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100 transition text-slate-700"
+                    placeholder="123"
                   />
                 </div>
               </div>
-              <div class="w-full space-y-2">
-                <label class="fieldset-label">Карт эзэмшигчийн нэр</label>
+
+              <div>
+                <label class="block text-sm font-medium text-slate-600 mb-2">
+                  Карт эзэмшигчийн нэр
+                </label>
                 <input
                   required
                   type="text"
                   [value]="paymentInfoData()?.nameOnCard ?? ''"
                   (change)="handleInputChange($event, 'nameOnCard')"
-                  class="input w-full validator"
+                  class="w-full h-12 rounded-2xl border border-sky-200 bg-white px-4 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100 transition text-slate-700"
                   placeholder="Нэрээ оруулна уу"
                 />
               </div>
             </div>
-          </fieldset>
-          <div class="w-full flex items-center justify-between gap-x-3">
-            <label class="fieldset-label">
+          </div>
+
+          <!-- Remember info -->
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4"
+          >
+            <label
+              class="flex items-center gap-3 text-slate-700 cursor-pointer"
+            >
               <input
                 type="checkbox"
                 (change)="toggleRememberPaymentInfo($event)"
                 [checked]="rememberPaymentInfo()"
-                class="checkbox"
+                class="checkbox checkbox-info"
               />
-              Төлбөрийн мэдээллийг хадгалах
+              <span class="text-sm md:text-base">
+                Төлбөрийн мэдээллийг хадгалах
+              </span>
             </label>
-            <div class="tooltip tooltip-left">
-              <div class="tooltip-content">
-                <div class="text-sm w-[250px]">
-                  Мэдээллийг зөвхөн таны браузерт хадгална, сервер рүү
-                  илгээгдэхгүй
-                </div>
-              </div>
-              <fa-icon [icon]="faExclamationCircle"></fa-icon>
+
+            <div
+              class="flex items-center gap-2 text-slate-500 text-sm bg-sky-50 border border-sky-100 rounded-full px-3 py-2"
+            >
+              <fa-icon
+                [icon]="faExclamationCircle"
+                class="text-sky-500"
+              ></fa-icon>
+              <span>Зөвхөн браузерт хадгална</span>
             </div>
           </div>
+
           @if (cartItemQuantity() >= 1) {
-            <div class="border-t border-t-base-300 pt-4 mt-4 space-y-2">
-              <div class="flex items-center justify-between">
+            <!-- Summary -->
+            <div
+              class="rounded-2xl border border-sky-100 bg-sky-50/50 p-5 space-y-3"
+            >
+              <div class="flex items-center justify-between text-slate-600">
                 <span>Тоо ширхэг</span>
-                <span class="text-lg font-bold">{{ cartItemQuantity() }}</span>
+                <span class="text-lg font-bold text-slate-800">
+                  {{ cartItemQuantity() }}
+                </span>
               </div>
-              <div class="flex items-center justify-between">
+
+              <div class="flex items-center justify-between text-slate-600">
                 <span>Нийт дүн</span>
-                <span class="text-lg font-bold">{{ totalPrice() }}</span>
+                <span class="text-2xl font-extrabold text-sky-600">
+                  {{ totalPrice() }}
+                </span>
               </div>
             </div>
-            <button class="btn btn-primary w-full mt-2" type="submit">
+
+            <button
+              class="w-full h-14 rounded-full font-semibold bg-sky-500 text-white hover:bg-sky-600 transition shadow-[0_10px_25px_rgba(14,165,233,0.25)] disabled:opacity-50"
+              type="submit"
+            >
               @if (!isLoading() && !isSuccess()) {
-                Төлөх
-                {{ totalPrice() }}
+                Төлөх {{ totalPrice() }}
               } @else if (!isLoading() && isSuccess()) {
                 Амжилттай төлөв
               } @else {
@@ -143,19 +199,35 @@ import { Meta, Title } from '@angular/platform-browser';
           }
         </form>
       </div>
+
+      <!-- RIGHT: ORDER SUMMARY -->
       <div
-        class="w-full pb-14 lg:pb-0 lg:py-0 pt-28 lg:pt-28 px-6 lg:pr-24 lg:pl-8"
+        class="bg-white border border-sky-100 rounded-3xl shadow-[0_10px_40px_rgba(14,165,233,0.08)] p-6 md:p-8"
       >
-        <h2 class="text-xl font-bold uppercase">Захиалгын тойм</h2>
-        <p>Бараагаа шалгаж, хүргэлтийн тохиргоо сонгоно уу</p>
+        <div class="mb-8">
+          <div
+            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-100 text-sky-700 text-sm font-semibold border border-sky-200"
+          >
+            <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+            Захиалгын тойм
+          </div>
+
+          <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mt-4">
+            Захиалгын тойм
+          </h2>
+          <p class="text-slate-500 mt-2">
+            Бараагаа шалгаж, хүргэлтийн мэдээллээ баталгаажуулна уу
+          </p>
+        </div>
+
         <div>
           @if (cartItemQuantity() >= 1) {
             <div
-              class="mt-4 border border-gray-900 rounded-lg px-4 py-6 space-y-6 max-h-[calc(100dvh-200px)] overflow-y-auto"
+              class="rounded-2xl border border-sky-100 bg-sky-50/40 px-4 py-5 space-y-5 max-h-[calc(100dvh-220px)] overflow-y-auto"
             >
               @for (item of cartItems(); track item.id) {
                 <div
-                  class="border-b border-b-gray-900 pb-5 last:pb-0 last:border-b-0"
+                  class="bg-white border border-sky-100 rounded-2xl p-4 shadow-sm"
                 >
                   <app-shopping-cart-item [item]="item" />
                 </div>
@@ -163,30 +235,59 @@ import { Meta, Title } from '@angular/platform-browser';
             </div>
           } @else {
             <div
-              class="mt-10 flex items-center justify-center flex-col gap-y-2"
+              class="mt-6 flex items-center justify-center flex-col gap-y-4 rounded-2xl border border-dashed border-sky-200 bg-sky-50/40 px-6 py-12"
             >
-              <p class="text-xl text-center text-gray-400">
+              <div
+                class="w-16 h-16 rounded-full bg-white border border-sky-100 flex items-center justify-center text-2xl"
+              >
+                🛒
+              </div>
+
+              <p class="text-lg text-center text-slate-500 max-w-md">
                 Таны сагсанд бараа байхгүй байна. Дэлгүүр лүү буцаж бараа
                 сонгоорой.
               </p>
-              <a routerLink="/" class="btn btn-soft">Дэлгүүр луу буцах</a>
+
+              <a
+                routerLink="/"
+                class="inline-flex items-center justify-center h-12 px-6 rounded-full border border-sky-200 bg-white text-sky-700 font-semibold hover:bg-sky-50 transition"
+              >
+                Дэлгүүр лүү буцах
+              </a>
             </div>
           }
         </div>
       </div>
     </div>
+
     <dialog #checkoutSuccessDialog class="modal modal-bottom sm:modal-middle">
-      <div class="modal-box">
+      <div class="modal-box rounded-3xl border border-sky-100 shadow-2xl">
         <div class="flex items-center justify-center w-full mb-4">
-          <fa-icon
-            [icon]="faCheckCircle"
-            class="text-6xl text-emerald-500"
-          ></fa-icon>
+          <div
+            class="w-20 h-20 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center"
+          >
+            <fa-icon
+              [icon]="faCheckCircle"
+              class="text-5xl text-emerald-500"
+            ></fa-icon>
+          </div>
         </div>
-        <h3 class="text-xl font-bold text-center">Таны захиалга амжилттай</h3>
-        <div class="modal-action">
+
+        <h3 class="text-2xl font-bold text-center text-slate-800">
+          Таны захиалга амжилттай
+        </h3>
+        <p class="text-center text-slate-500 mt-2">
+          Захиалга амжилттай бүртгэгдлээ.
+        </p>
+
+        <div class="modal-action justify-center">
           <form method="dialog">
-            <button (click)="closeDialog()" class="btn btn-sm">Хаах</button>
+            <button
+              (click)="closeDialog()"
+              class="h-11 px-6 rounded-full bg-sky-500 text-white hover:bg-sky-600 transition"
+            >
+              Хаах
+            </button>
           </form>
         </div>
       </div>

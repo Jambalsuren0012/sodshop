@@ -16,32 +16,48 @@ export class AuthService {
       body: JSON.stringify({ email, password }),
     });
 
-    console.log('Response status:', response.status);
     const data = await response.json();
-    console.log('Response data:', data);
 
     if (!response.ok) {
       throw new Error(data.message || 'Login failed');
     }
 
-    localStorage.setItem('user', JSON.stringify(data.user));
-    return data.user;
+    const user = data.data; // API structure
+
+    localStorage.setItem('user', JSON.stringify(user));
+
+    return user;
   }
 
   logout() {
     localStorage.removeItem('user');
   }
 
-  getUser(): User | null {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
-  }
+  getUser() {
+    const u = localStorage.getItem('user');
 
+    if (!u || u === 'undefined') {
+      return null;
+    }
+
+    try {
+      return JSON.parse(u);
+    } catch {
+      return null;
+    }
+  }
   isLoggedIn(): boolean {
     return !!localStorage.getItem('user');
   }
 
   isAdmin(): boolean {
     return this.getUser()?.role === 'admin';
+  }
+  async signup(name: string, email: string, password: string) {
+    return fetch('/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password }),
+    });
   }
 }
